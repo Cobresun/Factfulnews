@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:factfulnews/drawer.dart';
+import 'package:factfulnews/article.dart';
+import 'dart:async';
+import 'dart:convert';
 
 void main() => runApp(MyApp());
+
+Future<List<Article>> fetchArticles(BuildContext context) async{    //TODO: remove oontext
+  String jsonStr = await DefaultAssetBundle.of(context).loadString("all.json");
+
+  List articles = json.decode(jsonStr)["articles"];
+
+  return articles.map((json) => new Article.fromJson(json)).toList();
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -45,6 +56,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var listArticles;
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+  
+  @override
+  void initState(){
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
