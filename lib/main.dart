@@ -6,12 +6,21 @@ import 'dart:convert';
 
 void main() => runApp(MyApp());
 
+//TODO: This entire function, it's what joins the frontend to the backend
 Future<List<Article>> fetchArticles(BuildContext context) async{    //TODO: remove oontext
+  print("hi lol");
+  /*
   String jsonStr = await DefaultAssetBundle.of(context).loadString("all.json");
-
+  print(jsonStr);
   List articles = json.decode(jsonStr)["articles"];
-
   return articles.map((json) => new Article.fromJson(json)).toList();
+  */
+  List<Article> articles = new List<Article>();
+  articles.add(new Article(sourceName: "cnn.com", sourceId: "23jf94", content: "Content.", publishDate: "2019-01-22T21:56:00Z", description: "Description", author: "Steve", imgSrc: "https://sunnynagam.github.io/img/profile.jpg", url: "https://sunnynagam.github.io/", title: "An article1"));
+  articles.add(new Article(sourceName: "cnn.com", sourceId: "23jf94", content: "Content.", publishDate: "2019-01-22T21:56:00Z", description: "Description", author: "Steve", imgSrc: "https://sunnynagam.github.io/img/profile.jpg", url: "https://sunnynagam.github.io/", title: "An article2"));
+  articles.add(new Article(sourceName: "cnn.com", sourceId: "23jf94", content: "Content.", publishDate: "2019-01-22T21:56:00Z", description: "Description", author: "Steve", imgSrc: "https://sunnynagam.github.io/img/profile.jpg", url: "https://sunnynagam.github.io/", title: "An article3"));
+  articles.add(new Article(sourceName: "cnn.com", sourceId: "23jf94", content: "Content.", publishDate: "2019-01-22T21:56:00Z", description: "Description", author: "Steve", imgSrc: "https://sunnynagam.github.io/img/profile.jpg", url: "https://sunnynagam.github.io/", title: "An article4"));
+  return articles;
 }
 
 class MyApp extends StatelessWidget {
@@ -62,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState(){
     super.initState();
-
+    refreshListArticles();
   }
 
   @override
@@ -80,30 +89,77 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Stuff here"),
-          ],
+        child: RefreshIndicator(
+          key: refreshKey,
+          child: FutureBuilder<List<Article>>(
+            future: listArticles,
+            builder: (context, snapshot){
+              if(snapshot.hasError){
+                print("Error: ${snapshot.error}");
+                return Text('Error: ${snapshot.error}');
+              }
+              else if(snapshot.hasData){
+                print("Snap has data");
+                List<Article> articles = snapshot.data;
+                print(articles[0].title);
+
+                return new ListView(
+                  children: articles.map((article)=> GestureDetector(
+                    onTap: (){
+                      // TODO: launch the article here
+                    },
+                    child: Card(
+                      elevation: 1.0,
+                      color: Colors.white,
+                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 2.0),
+                            width: 100,
+                            height: 140,
+                            child: Image.network(article.imgSrc),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.symmetric(vertical:3)),
+                                Text(article.title, style: Theme.of(context).textTheme.title,),
+                                Text(article.publishDate, style: Theme.of(context).textTheme.body1,),
+                                Padding(padding: EdgeInsets.symmetric(vertical: 8),),
+                                Text(article.description, style: Theme.of(context).textTheme.body2,),
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                    ),
+                  )).toList(),
+                );
+              }
+
+              return CircularProgressIndicator();
+            },
+          ),
+          onRefresh: refreshListArticles,
         ),
       ),
+
       drawer: drawer,       // This is the hamburger menu on the right, it's defined in it's own file
     );
   }
+
+  Future<Null> refreshListArticles(){
+    refreshKey.currentState?.show(atTop: false);
+
+    setState((){
+      listArticles = fetchArticles(context);
+    });
+
+    return null;
+  }
 }
+

@@ -27,4 +27,5 @@ class Article{
       sourceName: json["source"]["name"]
     );
   }
+
 }
