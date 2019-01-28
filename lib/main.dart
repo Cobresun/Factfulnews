@@ -9,15 +9,15 @@ void main() => runApp(MyApp());
 
 //TODO: This entire function, it's what joins the frontend to the backend
 Future<List<Article>> fetchArticles(BuildContext context) async{    //TODO: remove oontext
-  //print("hi lol");
+  print("hi lol");
 
-  // Once you run heroku local, this is your IPV4 address + 5000/all (or whatever port it is)
-  // this line is very shifty and needs to be burnt to the ground and redone
-  final response = await http.get("http://10.13.73.136:5000/all");
+  final response = await http.get("https://factfulnews.herokuapp.com/all");//("http://10.13.73.136:5000/all");
   //print(response);
 
   if(response.statusCode == 200) {
     List articles = json.decode(response.body);
+    print(articles[0]["title"]);
+    print(articles[0]["snippet"]);
     return articles.map((json) => new Article.fromJson(json)).toList();
   }
   else{
@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
               else if(snapshot.hasData){
                 print("Snap has data");
                 List<Article> articles = snapshot.data;
-                print(articles[0].title);
+                print(articles[0].snippet);
 
                 return new ListView(
                   children: articles.map((article)=> GestureDetector(
@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Padding(padding: EdgeInsets.only(top: 5)),
                                 Text(article.title, style: Theme.of(context).textTheme.title,),
                                 Divider(color: Colors.black54,),
-                                Text(article.snippet, style: Theme.of(context).textTheme.body1,),
+                                Text(article.snippet==null?"":article.snippet, style: Theme.of(context).textTheme.body1,),
                                 Padding(padding: EdgeInsets.only(bottom: 4)),
                               ],
                             ),
