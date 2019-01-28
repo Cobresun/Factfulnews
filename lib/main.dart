@@ -9,10 +9,12 @@ void main() => runApp(MyApp());
 
 //TODO: This entire function, it's what joins the frontend to the backend
 Future<List<Article>> fetchArticles(BuildContext context) async{    //TODO: remove oontext
-  print("hi lol");
+  //print("hi lol");
 
-  final response = await http.get("http://10.13.73.136:5000/all"); // i'm sure this isn't the best way to do this
-  print(response);
+  // Once you run heroku local, this is your IPV4 address + 5000/all (or whatever port it is)
+  // this line is very shifty and needs to be burnt to the ground and redone
+  final response = await http.get("http://10.13.73.136:5000/all");
+  //print(response);
 
   if(response.statusCode == 200) {
     List articles = json.decode(response.body);
