@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:factfulnews/drawer.dart';
+import 'package:http/http.dart' as http;
 import 'package:factfulnews/article.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -9,21 +10,28 @@ void main() => runApp(MyApp());
 //TODO: This entire function, it's what joins the frontend to the backend
 Future<List<Article>> fetchArticles(BuildContext context) async{    //TODO: remove oontext
   print("hi lol");
+
+  final response = await http.get("http://10.13.73.136:5000/all"); // i'm sure this isn't the best way to do this
+  print(response);
+
+  if(response.statusCode == 200) {
+    List articles = json.decode(response.body);
+    return articles.map((json) => new Article.fromJson(json)).toList();
+  }
+  else{
+    throw Exception("Failed to load articles from backend http request!");
+  }
   /*
-  String jsonStr = await DefaultAssetBundle.of(context).loadString("all.json");
-  print(jsonStr);
-  List articles = json.decode(jsonStr)["articles"];
-  return articles.map((json) => new Article.fromJson(json)).toList();
-  */
   List<Article> articles = new List<Article>();
-  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article1"));
-  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article2"));
-  articles.add(new Article(snippet: "In a shocking turn of events the judge of the infamous Nelson vs Road case sentenced himself to 10 years in solitary confinement when the defendant said \"No you.\"", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "Judge to Serve 10 Years in Prison"));
-  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article4"));
-  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article5"));
-  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article6"));
-  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article7"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", index: 1, title: "An article1"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", index: 2, title: "An article2"));
+  articles.add(new Article(snippet: "In a shocking turn of events the judge of the infamous Nelson vs Road case sentenced himself to 10 years in solitary confinement when the defendant said \"No you.\"", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", index: 3, title: "Judge to Serve 10 Years in Prison"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", index: 4, title: "An article4"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", index: 5, title: "An article5"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", index: 6, title: "An article6"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", index: 7, title: "An article7"));
   return articles;
+  */
 }
 
 class MyApp extends StatelessWidget {

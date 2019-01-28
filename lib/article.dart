@@ -1,16 +1,16 @@
 class Article{
   final String title;
   final String snippet;
-  final String id;
+  final int index;
   final String urlToImage;
   
-  Article({this.title, this.snippet, this.id, this.urlToImage});
+  Article({this.title, this.snippet, this.index, this.urlToImage});
 
   factory Article.fromJson(Map<String, dynamic> json){
     return Article(
         title: json["title"],
         snippet: json["snippet"],
-        id: json["id"],
+        index: json["index"],
         urlToImage: json["urlToImage"]
     );
   }
