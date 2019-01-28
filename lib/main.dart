@@ -16,10 +16,13 @@ Future<List<Article>> fetchArticles(BuildContext context) async{    //TODO: remo
   return articles.map((json) => new Article.fromJson(json)).toList();
   */
   List<Article> articles = new List<Article>();
-  articles.add(new Article(sourceName: "cnn.com", sourceId: "23jf94", content: "Content.", publishDate: "2019-01-22T21:56:00Z", description: "Description", author: "Steve", imgSrc: "https://sunnynagam.github.io/img/profile.jpg", url: "https://sunnynagam.github.io/", title: "An article1"));
-  articles.add(new Article(sourceName: "cnn.com", sourceId: "23jf94", content: "Content.", publishDate: "2019-01-22T21:56:00Z", description: "Description", author: "Steve", imgSrc: "https://sunnynagam.github.io/img/profile.jpg", url: "https://sunnynagam.github.io/", title: "An article2"));
-  articles.add(new Article(sourceName: "cnn.com", sourceId: "23jf94", content: "Content.", publishDate: "2019-01-22T21:56:00Z", description: "Description", author: "Steve", imgSrc: "https://sunnynagam.github.io/img/profile.jpg", url: "https://sunnynagam.github.io/", title: "An article3"));
-  articles.add(new Article(sourceName: "cnn.com", sourceId: "23jf94", content: "Content.", publishDate: "2019-01-22T21:56:00Z", description: "Description", author: "Steve", imgSrc: "https://sunnynagam.github.io/img/profile.jpg", url: "https://sunnynagam.github.io/", title: "An article4"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article1"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article2"));
+  articles.add(new Article(snippet: "In a shocking turn of events the judge of the infamous Nelson vs Road case sentenced himself to 10 years in solitary confinement when the defendant said \"No you.\"", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "Judge to Serve 10 Years in Prison"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article4"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article5"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article6"));
+  articles.add(new Article(snippet: "Description", urlToImage: "https://sunnynagam.github.io/img/profile.jpg", id: "https://sunnynagam.github.io/", title: "An article7"));
   return articles;
 }
 
@@ -109,28 +112,28 @@ class _MyHomePageState extends State<MyHomePage> {
                       // TODO: launch the article here
                     },
                     child: Card(
-                      elevation: 1.0,
+                      elevation: 3.0,
                       color: Colors.white,
-                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14.0),
+                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 2.0),
+                            margin: const EdgeInsets.symmetric(horizontal: 10.0),
                             width: 100,
                             height: 140,
-                            child: Image.network(article.imgSrc),
+                            child: Image.network(article.urlToImage),
                           ),
                           Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Padding(padding: EdgeInsets.symmetric(vertical:3)),
+                                Padding(padding: EdgeInsets.only(top: 5)),
                                 Text(article.title, style: Theme.of(context).textTheme.title,),
-                                Text(article.publishDate, style: Theme.of(context).textTheme.body1,),
-                                Padding(padding: EdgeInsets.symmetric(vertical: 8),),
-                                Text(article.description, style: Theme.of(context).textTheme.body2,),
+                                Divider(color: Colors.black54,),
+                                Text(article.snippet, style: Theme.of(context).textTheme.body1,),
+                                Padding(padding: EdgeInsets.only(bottom: 4)),
                               ],
                             ),
                           )
