@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:factfulnews/drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:factfulnews/article.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -120,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: articles.map((article)=> GestureDetector(
                     onTap: (){
                       // TODO: launch the article here
+                      _launchURL(article.index);
                     },
                     child: Card(
                       elevation: 3.0,
@@ -132,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             margin: const EdgeInsets.symmetric(horizontal: 10.0),
                             width: 100,
                             height: 140,
-                            child: Image.network(article.urlToImage),
+                            child: article.urlToImage==null?Text("Image Url Is Null"):Image.network(article.urlToImage),
                           ),
                           Expanded(
                             child: Column(
@@ -174,5 +176,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return null;
   }
+
+  _launchURL(int index) async {
+    final response = await http.get("https://factfulnews.herokuapp.com/all/article?id=${index}");
+    String url = response.body;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 }
 
