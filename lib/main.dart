@@ -3,6 +3,7 @@ import 'package:factfulnews/drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:factfulnews/article.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -121,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: articles.map((article)=> GestureDetector(
                     onTap: (){
                       // TODO: launch the article here
+                      FocusScope.of(context).requestFocus(FocusNode());
                       _launchURL(article.index);
                     },
                     child: Card(
@@ -181,7 +183,16 @@ class _MyHomePageState extends State<MyHomePage> {
     final response = await http.get("https://factfulnews.herokuapp.com/all/article?id=${index}");
     String url = response.body;
     if (await canLaunch(url)) {
-      await launch(url);
+      //await launch(url);
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (ctx)  =>
+          WebviewScaffold(
+            initialChild: Center(child: CircularProgressIndicator(),),
+            url: url,
+            appBar: AppBar(title: Text(url)),
+          ),
+        ),
+      );
     } else {
       throw 'Could not launch $url';
     }
