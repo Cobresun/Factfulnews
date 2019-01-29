@@ -10,16 +10,11 @@ import 'dart:convert';
 void main() => runApp(MyApp());
 
 //TODO: This entire function, it's what joins the frontend to the backend
-Future<List<Article>> fetchArticles(BuildContext context) async{    //TODO: remove oontext
-  print("hi lol");
-
+Future<List<Article>> fetchArticles() async{
   final response = await http.get("https://factfulnews.herokuapp.com/all");//("http://10.13.73.136:5000/all");
-  //print(response);
 
   if(response.statusCode == 200) {
     List articles = json.decode(response.body);
-    print(articles[0]["title"]);
-    print(articles[0]["snippet"]);
     return articles.map((json) => new Article.fromJson(json)).toList();
   }
   else{
@@ -173,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
     refreshKey.currentState?.show(atTop: false);
 
     setState((){
-      listArticles = fetchArticles(context);
+      listArticles = fetchArticles();
     });
 
     return null;
