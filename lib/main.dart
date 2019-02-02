@@ -77,7 +77,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var listArticles;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  
+
   @override
   void initState(){
     super.initState();
@@ -99,9 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: RefreshIndicator(
-          key: refreshKey,
-          child: FutureBuilder<List<Article>>(
+        child: FutureBuilder<List<Article>>(
             future: listArticles,
             builder: (context, snapshot){
               if(snapshot.hasError){
@@ -121,33 +119,42 @@ class _MyHomePageState extends State<MyHomePage> {
                       _launchURL(article.index);
                     },
                     child: Card(
-                      elevation: 3.0,
-                      color: Colors.white,
-                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                            width: 100,
-                            height: 140,
-                            child: article.urlToImage==null?Text("Image Url Is Null"):Image.network(article.urlToImage),
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Padding(padding: EdgeInsets.only(top: 5)),
-                                Text(article.title, style: Theme.of(context).textTheme.title,),
-                                Divider(color: Colors.black54,),
-                                Text(article.snippet==null?"":article.snippet, style: Theme.of(context).textTheme.body1,),
-                                Padding(padding: EdgeInsets.only(bottom: 4)),
-                              ],
+                        elevation: 1.0,
+                        color: Colors.white,
+                        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                              width: 100,
+                              height: 140,
+                              child: article.urlToImage==null?Text("Image Url Is Null"):Image.network(article.urlToImage),
                             ),
-                          )
-                        ],
-                      )
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(padding: EdgeInsets.only(top: 5)),
+                                    Text(article.title, style: Theme.of(context).textTheme.title,),
+                                    //Divider(color: Colors.black54,),
+                                    Padding(padding: EdgeInsets.symmetric(vertical: 4)),
+                                    Text(
+                                      article.snippet==null?"":article.snippet,
+                                      style: Theme.of(context).textTheme.body1,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
+                                    ),
+                                    Padding(padding: EdgeInsets.only(bottom: 4)),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        )
                     ),
                   )).toList(),
                 );
@@ -156,11 +163,8 @@ class _MyHomePageState extends State<MyHomePage> {
               return CircularProgressIndicator();
             },
           ),
-          onRefresh: refreshListArticles,
-        ),
       ),
 
-      drawer: drawer,       // This is the hamburger menu on the right, it's defined in it's own file
     );
   }
 
@@ -181,11 +185,11 @@ class _MyHomePageState extends State<MyHomePage> {
       //await launch(url);
       Navigator.of(context).push(
         MaterialPageRoute(builder: (ctx)  =>
-          WebviewScaffold(
-            initialChild: Center(child: CircularProgressIndicator(),),
-            url: url,
-            appBar: AppBar(title: Text(url)),
-          ),
+            WebviewScaffold(
+              initialChild: Center(child: CircularProgressIndicator(),),
+              url: url,
+              appBar: AppBar(title: Text(url)),
+            ),
         ),
       );
     } else {
