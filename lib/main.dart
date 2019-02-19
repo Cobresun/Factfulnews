@@ -15,7 +15,7 @@ Future<List<Article>> fetchArticles() async{
   final response = await http.get("https://factfulnews.herokuapp.com/all");//("http://10.13.73.136:5000/all");
 
   if(response.statusCode == 200) {
-    List articles = json.decode(response.body);
+    List articles = json.decode(response.body)["content"];        // TODO: error check this part, idk what to do if its an error tho
     return articles.map((json) => new Article.fromJson(json)).toList();
   }
   else{
@@ -120,16 +120,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       // Pop context on
                       final response = http.get("https://factfulnews.herokuapp.com/all/article?id=${article.index}");
-                      response.then((response){
+                      response.then((responseText){
                         //String html = '<h1>This is heading 1</h1> <h2>This is heading 2</h2><h3>This is heading 3</h3><h4>This is heading 4</h4><h5>This is heading 5</h5><h6>This is heading 6</h6><p><img alt="Test Image" src="https://i.ytimg.com/vi/RHLknisJ-Sg/maxresdefault.jpg" /></p>';
-                        if(response.body == "Error occured scraping site."){
+                        var response = json.decode(responseText.body);
+                        if(response["success"] == "false"){
+                          print(response["message"]);
                           FocusScope.of(context).requestFocus(FocusNode());
-                          _launchURL(article.index);
+                          _launchURL(article.url);
                         }
                         else {
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) =>
-                                  ArticleView(article.title, response.body)),);
+                          try {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) =>
+                                    ArticleView(
+                                        article.title, response["content"])),);
+                          } catch(err){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            _launchURL(article.url);
+                          }
                         }
                       });
 
@@ -194,9 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return null;
   }
 
-  _launchURL(int index) async {
-    final response = await http.get("https://factfulnews.herokuapp.com/all/article?id=${index}");
-    String url = response.body;
+  _launchURL(String url) async {
     if (await canLaunch(url)) {
       //await launch(url);
       Navigator.of(context).push(
