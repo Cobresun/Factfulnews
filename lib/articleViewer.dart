@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html_view/flutter_html_view.dart';
 import 'package:http/http.dart' as http;
 
 class ArticleView extends StatefulWidget {
   final String mainText;
+  final String articleTitle;
 
-  ArticleView(this.mainText);
+  ArticleView(this.articleTitle, this.mainText);
 
   @override
   _ArticleViewState createState() => _ArticleViewState();
@@ -24,18 +26,13 @@ class _ArticleViewState extends State<ArticleView>{
 
   @override
   Widget build(BuildContext context) {
-    String text = widget.mainText;
-
     return Scaffold(
-      body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Padding(padding: EdgeInsets.only(top: 5),),
-              Text(text),
-            ],
-          ),
-
-        )
+      body: Center(
+            child: new HtmlView(data: widget.mainText),
+      ),
+      appBar: AppBar(
+        title: Text(widget.articleTitle),
+      ),
 
     );
   }
