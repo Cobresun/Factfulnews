@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:factfulnews/drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:factfulnews/article.dart';
+import 'package:factfulnews/articleViewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'dart:async';
@@ -115,8 +116,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: articles.map((article)=> GestureDetector(
                     onTap: (){
                       // TODO: launch the article here
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      _launchURL(article.index);
+                      //FocusScope.of(context).requestFocus(FocusNode());
+                      //_launchURL(article.index);
+
+                      // Pop context on
+                      final response = http.get("https://factfulnews.herokuapp.com/all/article?id=${article.index}");
+                      response.then((response){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleView(response.body)),);
+                      });
+
                     },
                     child: Card(
                         elevation: 1.0,
